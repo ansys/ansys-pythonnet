@@ -139,12 +139,6 @@ namespace Python.Runtime
                 }
             }
 
-            if (type.IsInterface)
-            {
-                var ifaceObj = (InterfaceObject)ClassManager.GetClassImpl(type);
-                return ifaceObj.TryWrapObject(value);
-            }
-
             if (type.IsArray || type.IsEnum)
             {
                 return CLRObject.GetReference(value, type);
