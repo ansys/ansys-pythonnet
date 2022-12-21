@@ -2,6 +2,8 @@ name: Main (ARM)
 
 on:
   push:
+    tags:
+      - "*"
     branches:
       - master
   pull_request:
