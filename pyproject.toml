@@ -49,7 +49,7 @@ name = "ANSYS, Inc."
 email = "pyansys.maintainers@ansys.com"
 
 [project.urls]
-Homepage = "pythonnet.docs.pyansys.com"
+Homepage = "https://github.com/pyansys/ansys-pythonnet"
 Sources = "https://github.com/pyansys/ansys-pythonnet"
 
 [tool.setuptools]
