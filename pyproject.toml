@@ -10,7 +10,7 @@ license = {text = "MIT"}
 readme = "README.rst"
 
 dependencies = [
-    "clr_loader>=0.2.5,<0.3.0"
+    "clr_loader>=0.2.6,<0.3.0"
 ]
 
 requires-python = ">=3.7, <3.12"
@@ -50,6 +50,7 @@ file = "version.txt"
 
 [tool.setuptools.packages.find]
 include = ["pythonnet*"]
+exclude = [".gitignore"]
 
 [tool.pytest.ini_options]
 xfail_strict = true
