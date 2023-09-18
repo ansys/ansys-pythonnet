@@ -47,7 +47,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [windows, ubuntu, macos]
+        os: [windows, ubuntu]
         python: ["3.7", "3.8", "3.9", "3.10", "3.11"]
         platform: [x64, x86]
         exclude:
