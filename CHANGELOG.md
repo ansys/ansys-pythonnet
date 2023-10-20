@@ -7,13 +7,16 @@ This document follows the conventions laid out in [Keep a CHANGELOG][].
 
 ## [Unreleased][]
 
+
+## [3.0.3](https://github.com/pythonnet/pythonnet/releases/tag/v3.0.3) - 2023-10-11
+
 ### Added
 
-- use enum name in repr
+-   Support for Python 3.12
 
 ### Changed
 
-### Fixed
+-   Use enum name in `repr`
 
 ## [3.0.2](https://github.com/pythonnet/pythonnet/releases/tag/v3.0.2) - 2023-08-29
 
@@ -833,7 +836,7 @@ This version improves performance on benchmarks significantly compared to 2.3.
 
 [semantic versioning]: http://semver.org/
 
-[unreleased]: ../../compare/v2.3.0...HEAD
+[unreleased]: ../../compare/v3.0.1...HEAD
 
 [2.3.0]: ../../compare/v2.2.2...v2.3.0
 
