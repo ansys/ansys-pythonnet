@@ -5,8 +5,35 @@ project adheres to [Semantic Versioning][].
 
 This document follows the conventions laid out in [Keep a CHANGELOG][].
 
-## [Unreleased][]
+## Unreleased
 
+### Added
+### Changed
+### Fixed
+
+
+## [3.0.4](https://github.com/pythonnet/pythonnet/releases/tag/v3.0.4) - 2024-09-19
+
+### Added
+
+- use enum name in repr
+
+### Changed
+
+-   Added a `FormatterFactory` member in RuntimeData to create formatters with
+    parameters. For compatibility, the `FormatterType` member is still present
+    and has precedence when defining both `FormatterFactory` and `FormatterType`
+-   Added a post-serialization and a pre-deserialization step callbacks to
+    extend (de)serialization process
+-   Added an API to stash serialized data on Python capsules
+
+### Fixed
+
+-   Fixed RecursionError for reverse operators on C# operable types from python. See #2240
+-   Fixed crash when .NET event has no `AddMethod`
+-   Fixed probing for assemblies in `sys.path` failing when a path in `sys.path`
+    has invalid characters. See #2376
+-   Fixed possible access violation exception on shutdown. See ([#1977][i1977])
 
 ## [3.0.3](https://github.com/pythonnet/pythonnet/releases/tag/v3.0.3) - 2023-10-11
 
@@ -953,3 +980,5 @@ This version improves performance on benchmarks significantly compared to 2.3.
 [i238]: https://github.com/pythonnet/pythonnet/issues/238
 [i1481]: https://github.com/pythonnet/pythonnet/issues/1481
 [i1672]: https://github.com/pythonnet/pythonnet/pull/1672
+[i2311]: https://github.com/pythonnet/pythonnet/issues/2311
+[i1977]: https://github.com/pythonnet/pythonnet/issues/1977
