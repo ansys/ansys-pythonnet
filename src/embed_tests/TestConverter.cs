@@ -192,6 +192,7 @@ namespace Python.EmbeddingTest
             var pyObject = i.ToPythonAs<IConvertible>();
             var type = pyObject.GetPythonType();
             Assert.AreEqual(nameof(IConvertible), type.Name);
+            Assert.AreEqual(nameof(IConvertible), "int");
         }
 
         // regression for https://github.com/pythonnet/pythonnet/issues/451
