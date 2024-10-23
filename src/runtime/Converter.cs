@@ -117,7 +117,9 @@ namespace Python.Runtime
 
         internal static NewReference ToPythonDetectType(object? value)
             => value is null ? new NewReference(Runtime.PyNone) : ToPython(value, value.GetType());
-        internal static NewReference ToPython(object? value, Type type)
+
+
+        internal static NewReference ToPython(object? value, Type type, bool wrapInterface = false)
         {
             if (value is PyObject pyObj)
             {
@@ -142,6 +144,12 @@ namespace Python.Runtime
             if (type.IsArray || type.IsEnum)
             {
                 return CLRObject.GetReference(value, type);
+            }
+
+            if (wrapInterface && type.IsInterface)
+            {
+                var ifaceObj = (InterfaceObject)ClassManager.GetClassImpl(type);
+                return ifaceObj.TryWrapObject(value);
             }
 
             // it the type is a python subclass of a managed type then return the
@@ -979,7 +987,7 @@ namespace Python.Runtime
         public static PyObject ToPythonAs<T>(this T? o)
         {
             if (o is null) return Runtime.None;
-            return Converter.ToPython(o, typeof(T)).MoveToPyObject();
+            return Converter.ToPython(o, typeof(T), true).MoveToPyObject();
         }
     }
 }

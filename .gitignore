@@ -36,6 +36,7 @@ coverage.xml
 *.vcxproj.filters
 *.userprefs
 *.DotSettings.user
+.runsettings
 
 # Build results
 [Bb]in/
