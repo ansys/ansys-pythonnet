@@ -42,7 +42,7 @@ jobs:
 
   tests:
     name: Build and Test
-    runs-on: ${{ matrix.os }}-latest
+    runs-on: ${{ matrix.os.instance }}
     timeout-minutes: 15
 
     strategy:
@@ -70,7 +70,7 @@ jobs:
     steps:
       - name: Set Environment on macOS
         uses: maxim-lobanov/setup-xamarin@v1
-        if: ${{ matrix.os == 'macos' }}
+        if: ${{ matrix.os.category == 'macos' }}
         with:
           mono-version: latest
 
@@ -86,7 +86,7 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python }}
-          architecture: ${{ matrix.platform }}
+          architecture: ${{ matrix.os.platform }}
 
       - name: Install dependencies
         run: |
@@ -98,43 +98,43 @@ jobs:
           pip install -v .
 
       - name: Set Python DLL path and PYTHONHOME (non Windows)
-        if: ${{ matrix.os != 'windows' }}
+        if: ${{ matrix.os.category != 'windows' }}
         run: |
           echo PYTHONNET_PYDLL=$(python -m find_libpython) >> $GITHUB_ENV
           echo PYTHONHOME=$(python -c 'import sys; print(sys.prefix)') >> $GITHUB_ENV
 
       - name: Set Python DLL path and PYTHONHOME (Windows)
-        if: ${{ matrix.os == 'windows' }}
+        if: ${{ matrix.os.category == 'windows' }}
         run: |
           Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append -InputObject "PYTHONNET_PYDLL=$(python -m find_libpython)"
           Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append -InputObject "PYTHONHOME=$(python -c 'import sys; print(sys.prefix)')"
 
       - name: Embedding tests
-        run: dotnet test --runtime any-${{ matrix.platform }} --logger "console;verbosity=detailed" src/embed_tests/
+        run: dotnet test --runtime any-${{ matrix.os.platform }} --logger "console;verbosity=detailed" src/embed_tests/
         env:
           MONO_THREADS_SUSPEND: preemptive # https://github.com/mono/mono/issues/21466
 
       - name: Python Tests (Mono)
-        if: ${{ matrix.os != 'windows' }}
+        if: ${{ matrix.os.category != 'windows' }}
         run: pytest --runtime mono
 
       # TODO: Run these tests on Windows x86
       - name: Python Tests (.NET Core)
-        if: ${{ matrix.platform == 'x64' }}
+        if: ${{ matrix.os.platform == 'x64' }}
         run: pytest --runtime coreclr
 
       - name: Python Tests (.NET Framework)
-        if: ${{ matrix.os == 'windows' }}
+        if: ${{ matrix.os.category == 'windows' }}
         run: pytest --runtime netfx
 
       - name: Python tests run from .NET
-        run: dotnet test --runtime any-${{ matrix.platform }} src/python_tests_runner/
+        run: dotnet test --runtime any-${{ matrix.os.platform }} src/python_tests_runner/
 
       - name: Perf tests
-        if: ${{ (matrix.python == '3.8') && (matrix.platform == 'x64') }}
+        if: ${{ (matrix.python == '3.8') && (matrix.os.platform == 'x64') }}
         run: |
           pip install --force --no-deps --target src/perf_tests/baseline/ pythonnet==2.5.2
-          dotnet test --configuration Release --runtime any-${{ matrix.platform }} --logger "console;verbosity=detailed" src/perf_tests/
+          dotnet test --configuration Release --runtime any-${{ matrix.os.platform }} --logger "console;verbosity=detailed" src/perf_tests/
 
       - name: "Build library source and wheel artifacts"
         run: |
