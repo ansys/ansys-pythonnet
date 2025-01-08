@@ -316,7 +316,7 @@ namespace Python.Runtime
                 // Then release the GIL for good, if there is somehting to release
                 // Use the unchecked version as the checked version calls `abort()`
                 // if the current state is NULL.
-                if (_PyThreadState_UncheckedGet() != (PyThreadState*)0)
+                if (PyThreadState_GetUnchecked() != (PyThreadState*)0)
                 {
                     PyEval_SaveThread();
                 }
@@ -705,7 +705,7 @@ namespace Python.Runtime
         internal static PyThreadState* PyThreadState_Get() => Delegates.PyThreadState_Get();
 
 
-        internal static PyThreadState* _PyThreadState_UncheckedGet() => Delegates._PyThreadState_UncheckedGet();
+        internal static PyThreadState* PyThreadState_GetUnchecked() => Delegates.PyThreadState_GetUnchecked();
 
 
         internal static int PyGILState_Check() => Delegates.PyGILState_Check();
@@ -718,20 +718,6 @@ namespace Python.Runtime
 
         internal static PyThreadState* PyGILState_GetThisThreadState() => Delegates.PyGILState_GetThisThreadState();
 
-
-        public static int Py_Main(int argc, string[] argv)
-        {
-            var marshaler = StrArrayMarshaler.GetInstance(null);
-            var argvPtr = marshaler.MarshalManagedToNative(argv);
-            try
-            {
-                return Delegates.Py_Main(argc, argvPtr);
-            }
-            finally
-            {
-                marshaler.CleanUpNativeData(argvPtr);
-            }
-        }
 
         internal static void PyEval_InitThreads() => Delegates.PyEval_InitThreads();
 
