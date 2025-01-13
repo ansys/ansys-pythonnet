@@ -64,9 +64,10 @@ namespace Python.Runtime
                 var tp = Type.GetType(serializationInfo.GetString(SerializationType));
                 if (tp != null)
                 {
+                    var bindingOptions = BindingManager.GetBindingOptions(tp);
                     var memberName = serializationInfo.GetString(SerializationMemberName);
                     MemberInfo? mi = Get(tp, memberName, ClassManager.BindingFlags);
-                    if (mi != null && ShouldBindMember(mi))
+                    if (mi != null && ShouldBindMember(mi, bindingOptions))
                     {
                         info = mi;
                     }
@@ -92,11 +93,11 @@ namespace Python.Runtime
         // based on it's setter/getter (which is a method 
         //  info) visibility and events based on their
         // AddMethod visibility.
-        static bool ShouldBindMember(MemberInfo mi)
+        static bool ShouldBindMember(MemberInfo mi, BindingOptions bindingOptions)
         {
             if (mi is PropertyInfo pi)
             {
-                return ClassManager.ShouldBindProperty(pi);
+                return ClassManager.ShouldBindProperty(pi, bindingOptions);
             }
             else if (mi is FieldInfo fi)
             {
@@ -104,7 +105,7 @@ namespace Python.Runtime
             }
             else if (mi is EventInfo ei)
             {
-                return ClassManager.ShouldBindEvent(ei);
+                return ClassManager.ShouldBindEvent(ei, bindingOptions);
             }
 
             return false;

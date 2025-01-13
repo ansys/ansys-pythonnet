@@ -211,7 +211,8 @@ namespace Python.Runtime
             // that we'll be putting in the Python class __dict__.
 
             var bindingOptions = BindingManager.GetBindingOptions(type);
-            ClassInfo info = GetClassInfo(type, impl);
+
+            ClassInfo info = GetClassInfo(type, impl, bindingOptions);
 
             impl.indexer = info.indexer;
             impl.richcompare.Clear();
@@ -289,10 +290,20 @@ namespace Python.Runtime
             Runtime.PyType_Modified(pyType.Reference);
         }
 
-        internal static bool ShouldBindMethod(MethodBase mb)
+        internal static bool ShouldBindMethod(MethodBase mb, BindingOptions bindingOptions)
         {
             if (mb is null) throw new ArgumentNullException(nameof(mb));
-            return (mb.IsPublic || mb.IsFamily || mb.IsFamilyOrAssembly);
+
+            bool rejectByVisibility = false;
+            if (mb.IsPrivate)
+            {
+                if (bindingOptions.AllowExplicitInterfaceImplementation)
+                    // detect explicit interface implementation
+                    rejectByVisibility = !mb.IsVirtual;
+                else
+                    rejectByVisibility = true;
+            }
+            return (!rejectByVisibility || mb.IsFamily || mb.IsFamilyOrAssembly);
         }
 
         internal static bool ShouldBindField(FieldInfo fi)
@@ -301,7 +312,7 @@ namespace Python.Runtime
             return (fi.IsPublic || fi.IsFamily || fi.IsFamilyOrAssembly);
         }
 
-        internal static bool ShouldBindProperty(PropertyInfo pi)
+        internal static bool ShouldBindProperty(PropertyInfo pi, BindingOptions bindingOptions)
         {
                 MethodInfo? mm;
                 try
@@ -324,16 +335,27 @@ namespace Python.Runtime
                     return false;
                 }
 
-                return ShouldBindMethod(mm);
+                return ShouldBindMethod(mm, bindingOptions);
         }
 
-        internal static bool ShouldBindEvent(EventInfo ei)
+        internal static bool ShouldBindEvent(EventInfo ei, BindingOptions bindingOptions)
         {
-            return ei.GetAddMethod(true) is { } add && ShouldBindMethod(add);
+            return ei.GetAddMethod(true) is { } add && ShouldBindMethod(add, bindingOptions);
         }
 
-        private static ClassInfo GetClassInfo(Type type, ClassBase impl)
+        private static string SanitizeName(string name)
         {
+            // For explicit interface implementation, the name of the attribute will be:
+            //    `Class.Interface.Attribute`
+            // In that case, only use the last token for the real attribute name to bind.
+            if (name.Contains("."))
+                name = name.Substring(name.LastIndexOf(".")+1);
+            return name;
+        }
+
+        private static ClassInfo GetClassInfo(Type type, ClassBase impl, BindingOptions bindingOptions)
+        {
+            var typeName = type.Name;
             var ci = new ClassInfo();
             var methods = new Dictionary<string, List<MethodBase>>();
             MethodInfo meth;
@@ -437,11 +459,12 @@ namespace Python.Runtime
                 {
                     case MemberTypes.Method:
                         meth = (MethodInfo)mi;
-                        if (!ShouldBindMethod(meth))
+                        if (!ShouldBindMethod(meth, bindingOptions))
                         {
                             continue;
                         }
-                        name = meth.Name;
+
+                        name = SanitizeName(meth.Name);
 
                         //TODO mangle?
                         if (name == "__init__" && !impl.HasCustomNew())
@@ -472,7 +495,7 @@ namespace Python.Runtime
                     case MemberTypes.Property:
                         var pi = (PropertyInfo)mi;
 
-                        if(!ShouldBindProperty(pi))
+                        if(!ShouldBindProperty(pi, bindingOptions))
                         {
                             continue;
                         }
@@ -491,8 +514,9 @@ namespace Python.Runtime
                             continue;
                         }
 
+                        var propertyName = SanitizeName(pi.Name);
                         ob = new PropertyObject(pi);
-                        ci.members[pi.Name] = ob.AllocObject();
+                        ci.members[propertyName] = ob.AllocObject();
                         continue;
 
                     case MemberTypes.Field:
@@ -507,7 +531,7 @@ namespace Python.Runtime
 
                     case MemberTypes.Event:
                         var ei = (EventInfo)mi;
-                        if (!ShouldBindEvent(ei))
+                        if (!ShouldBindEvent(ei, bindingOptions))
                         {
                             continue;
                         }
