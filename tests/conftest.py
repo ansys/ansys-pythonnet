@@ -90,7 +90,7 @@ def pytest_configure(config):
     python_test_module = clr.AddReference("Python.Test")
     configure_custom_binding_options(python_test_module)
 
-    launch_debugger()
+    #launch_debugger()
 
 
 def configure_custom_binding_options(python_test_module):
