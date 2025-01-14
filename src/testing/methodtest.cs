@@ -736,7 +736,6 @@ namespace Python.Test
         }
     }
 
-
     public class MethodTestSub : MethodTest
     {
         public MethodTestSub() : base()
