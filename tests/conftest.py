@@ -87,7 +87,17 @@ def pytest_configure(config):
     import clr
 
     sys.path.append(str(bin_path))
-    clr.AddReference("Python.Test")
+    python_test_module = clr.AddReference("Python.Test")
+    configure_custom_binding_options(python_test_module)
+
+
+def configure_custom_binding_options(python_test_module):
+    from Python.Runtime import BindingManager, BindingOptions
+    binding_options = BindingOptions()
+    binding_options.AllowExplicitInterfaceImplementation = True
+    prop_test_3_type = [t for t in python_test_module.GetTypes() if "PropertyTest3" == t.Name][0]
+
+    BindingManager.SetBindingOptions(prop_test_3_type, binding_options)
 
 
 def pytest_unconfigure(config):
