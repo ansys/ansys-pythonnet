@@ -3,8 +3,8 @@
 """Test CLR property support."""
 
 import pytest
-from Python.Test import PropertyTest
 
+from Python.Test import PropertyTest, PropertyTest2, PropertyTest3
 
 def test_public_instance_property():
     """Test public instance properties."""
@@ -92,6 +92,15 @@ def test_private_property():
 
     with pytest.raises(AttributeError):
         _ = PropertyTest.PrivateStaticProperty
+
+def test_inherited_property():
+    """Test inherited properties."""
+
+    assert PropertyTest().InheritedProperty == 1
+    with pytest.raises(AttributeError):
+        _ = PropertyTest2().InheritedProperty
+
+    assert PropertyTest3().InheritedProperty == 3
 
 
 def test_property_descriptor_get_set():

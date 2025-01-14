@@ -1,5 +1,9 @@
 namespace Python.Test
 {
+    public interface IInherited {
+        int InheritedProperty { get; }
+    }
+
     /// <summary>
     /// Supports units tests for property access.
     /// </summary>
@@ -80,5 +84,17 @@ namespace Python.Test
             get { return _enum_property; }
             set { _enum_property = value; }
         }
+
+        public int InheritedProperty => 1;
+    }
+
+    public class PropertyTest2 : IInherited
+    {
+        int IInherited.InheritedProperty => 2;
+    }
+
+    public class PropertyTest3 : IInherited
+    {
+        int IInherited.InheritedProperty => 3;
     }
 }

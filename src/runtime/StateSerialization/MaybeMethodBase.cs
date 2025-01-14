@@ -117,9 +117,11 @@ namespace Python.Runtime
 
             var visibility = flags & MaybeMethodFlags.Visibility;
 
+            var bindingOptions = BindingManager.GetBindingOptions(declaringType);
+
             var result = alternatives.Cast<MethodBase>().FirstOrDefault(m
                 => MatchesGenericCount(m, genericCount) && MatchesSignature(m, parameters)
-                && (Visibility(m) == visibility || ClassManager.ShouldBindMethod(m)));
+                && (Visibility(m) == visibility || ClassManager.ShouldBindMethod(m, bindingOptions)));
 
             if (result is null)
                 throw new MissingMethodException($"Matching overload not found for {declaringType}.{name}");
