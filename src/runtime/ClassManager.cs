@@ -295,7 +295,7 @@ namespace Python.Runtime
             if (mb is null) throw new ArgumentNullException(nameof(mb));
 
             bool rejectByVisibility = false;
-            if (mb.IsPrivate)
+            if (!mb.IsPublic)
             {
                 if (bindingOptions.AllowExplicitInterfaceImplementation)
                     // detect explicit interface implementation
