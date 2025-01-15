@@ -90,14 +90,27 @@ def pytest_configure(config):
     python_test_module = clr.AddReference("Python.Test")
     configure_custom_binding_options(python_test_module)
 
+    #launch_debugger()
+
 
 def configure_custom_binding_options(python_test_module):
     from Python.Runtime import BindingManager, BindingOptions
+    module_types = python_test_module.GetTypes()
+
     binding_options = BindingOptions()
     binding_options.AllowExplicitInterfaceImplementation = True
-    prop_test_3_type = [t for t in python_test_module.GetTypes() if "PropertyTest3" == t.Name][0]
-
+    prop_test_3_type = [t for t in module_types if "PropertyTest3" == t.Name][0]
     BindingManager.SetBindingOptions(prop_test_3_type, binding_options)
+
+    binding_options = BindingOptions()
+    binding_options.Pep8Aliases = True
+    method_test_pep8_type = [t for t in module_types if "Pep8Test" == t.Name][0]
+    BindingManager.SetBindingOptions(method_test_pep8_type, binding_options)
+
+
+def launch_debugger():
+    import System
+    System.Diagnostics.Debugger.Launch()
 
 
 def pytest_unconfigure(config):

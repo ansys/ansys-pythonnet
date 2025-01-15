@@ -9,6 +9,7 @@ namespace Python.Runtime
         private bool _SuppressDocs = false;
         private bool _SuppressOverloads = false;
         private bool _AllowExplicitInterfaceImplementation = false;
+        private bool _Pep8Aliases = false;
 
         //[ModuleProperty]
         public bool SuppressDocs
@@ -28,6 +29,12 @@ namespace Python.Runtime
         {
             get { return _AllowExplicitInterfaceImplementation; }
             set { _AllowExplicitInterfaceImplementation = value; }
+        }
+
+        public bool Pep8Aliases
+        {
+            get { return _Pep8Aliases; }
+            set { _Pep8Aliases = value; }
         }
     }
 

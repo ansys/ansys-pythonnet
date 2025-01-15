@@ -353,6 +353,29 @@ namespace Python.Runtime
             return name;
         }
 
+        private static string ToSnakeCase(string str)
+        {
+            var strToModify = str;
+            var prefix = "";
+            if (str.StartsWith("get_"))
+            {
+                prefix = "get_";
+                strToModify = str.Substring(4);
+            }
+            if (str.StartsWith("set_"))
+            {
+                prefix = "set_";
+                strToModify = str.Substring(4);
+            }
+
+            var result = string.Concat(
+                strToModify.Select((x, i) =>
+                    i > 0 && char.IsUpper(x) && (char.IsLower(strToModify[i - 1]) || i < strToModify.Length - 1 && char.IsLower(strToModify[i + 1]))
+                        ? "_" + x
+                        : x.ToString())).ToLowerInvariant();
+            return prefix + result;
+        }
+
         private static ClassInfo GetClassInfo(Type type, ClassBase impl, BindingOptions bindingOptions)
         {
             var typeName = type.Name;
@@ -517,6 +540,12 @@ namespace Python.Runtime
                         var propertyName = SanitizeName(pi.Name);
                         ob = new PropertyObject(pi);
                         ci.members[propertyName] = ob.AllocObject();
+                        if (bindingOptions.Pep8Aliases)
+                        {
+                            string pep8PropertyName = ToSnakeCase(propertyName);
+                            if (pep8PropertyName != null && pep8PropertyName != propertyName)
+                                ci.members[pep8PropertyName] = ob.AllocObject();
+                        }
                         continue;
 
                     case MemberTypes.Field:
@@ -527,6 +556,12 @@ namespace Python.Runtime
                         }
                         ob = new FieldObject(fi);
                         ci.members[mi.Name] = ob.AllocObject();
+                        if (bindingOptions.Pep8Aliases)
+                        {
+                            string pep8FieldName = ToSnakeCase(mi.Name);
+                            if (pep8FieldName != null && pep8FieldName != mi.Name)
+                                ci.members[pep8FieldName] = ob.AllocObject();
+                        }
                         continue;
 
                     case MemberTypes.Event:
@@ -563,6 +598,13 @@ namespace Python.Runtime
 
                 ob = new MethodObject(type, name, mlist);
                 ci.members[name] = ob.AllocObject();
+                if (bindingOptions.Pep8Aliases)
+                {
+                    string pep8Name = ToSnakeCase(name);
+                    if (pep8Name != null && pep8Name != name)
+                        ci.members[pep8Name] = ob.AllocObject();
+                }
+
                 if (mlist.Any(OperatorMethod.IsOperatorMethod))
                 {
                     string pyName = OperatorMethod.GetPyMethodName(name);
