@@ -55,7 +55,7 @@ Sources = "https://github.com/pyansys/ansys-pythonnet"
 [tool.setuptools]
 zip-safe = false
 py-modules = ["clr"]
-license-files = []
+license-files = ["LICENSE"]
 
 [tool.setuptools.dynamic.version]
 file = "version.txt"
