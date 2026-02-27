@@ -599,13 +599,14 @@ namespace Python.Runtime
 
                 ob = new MethodObject(type, name, mlist);
                 ci.members[name] = ob.AllocObject();
-<<<<<<< HEAD
+
                 if (bindingOptions.Pep8Aliases)
                 {
                     string pep8Name = ToSnakeCase(name);
                     if (pep8Name != null && pep8Name != name)
                         ci.members[pep8Name] = ob.AllocObject();
-=======
+                }
+
                 if (name == nameof(IDictionary<int, int>.Remove)
                     && mlist.Any(m => m.DeclaringType?.GetInterfaces()
                         .Any(i => i.TryGetGenericDefinition() == typeof(IDictionary<,>)) is true))
@@ -619,7 +620,6 @@ namespace Python.Runtime
                 {
                     ci.del = new();
                     ci.del.AddRange(mlist.Where(m => !m.IsStatic));
->>>>>>> upstream/master
                 }
 
                 if (mlist.Any(OperatorMethod.IsOperatorMethod))
