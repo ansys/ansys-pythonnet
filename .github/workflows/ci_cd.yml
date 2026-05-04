@@ -49,12 +49,10 @@ jobs:
       fail-fast: false
       matrix:
         os:
-          # Disabled for now, will require some work
-          # (https://github.com/pythonnet/pythonnet/issues/2653)
-          #
-          # - category: windows
-          #   platform: x86
-          #   instance: windows-latest
+          - category: windows
+            platform: x86
+            instance: windows-latest
+            suffix:   -windows-x86-none
 
           - category: windows
             platform: x64
@@ -82,6 +80,25 @@ jobs:
             suffix:   -macos-aarch64-none
 
         python: ["3.10", "3.11", "3.12", "3.13", "3.14"]
+
+        exclude:
+          # Fails with initfs_encoding error
+          - os:
+              category: windows
+              platform: x86
+            python: "3.10"
+
+          # Fails to find pytest
+          - os:
+              category: windows
+              platform: x64
+            python: "3.10"
+
+          # Fails to call mono methods
+          - os:
+              category: windows
+              platform: x86
+            python: "3.13"
 
     steps:
       - name: Checkout code
