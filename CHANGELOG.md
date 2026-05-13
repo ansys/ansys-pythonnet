@@ -17,12 +17,9 @@ This document follows the conventions laid out in [Keep a CHANGELOG][].
 ### Changed
 ### Fixed
 
-<<<<<<< HEAD
-=======
 -  Fixed crash when trying to `del clrObj[...]` for non-arrays
 -  ci: properly exclude job (#2542)
 
->>>>>>> upstream/master
 ## [3.0.5](https://github.com/pythonnet/pythonnet/releases/tag/v3.0.5) - 2024-12-13
 
 ### Added
