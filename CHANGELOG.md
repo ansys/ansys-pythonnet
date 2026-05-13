@@ -10,6 +10,9 @@ This document follows the conventions laid out in [Keep a CHANGELOG][].
 ### Added
 
 -  Support `del obj[...]` for types derived from `IList<T>` and `IDictionary<K, V>`
+-  Support for .NET Framework 4.6.1 (#2701)
+-  Add context manager protocol for .NET IDisposable types, allowing use of `with` statements
+   for IDisposable objects (#2568)
 
 ### Changed
 ### Fixed
@@ -17,7 +20,7 @@ This document follows the conventions laid out in [Keep a CHANGELOG][].
 <<<<<<< HEAD
 =======
 -  Fixed crash when trying to `del clrObj[...]` for non-arrays
-- ci: properly exclude job (#2542)
+-  ci: properly exclude job (#2542)
 
 >>>>>>> upstream/master
 ## [3.0.5](https://github.com/pythonnet/pythonnet/releases/tag/v3.0.5) - 2024-12-13
