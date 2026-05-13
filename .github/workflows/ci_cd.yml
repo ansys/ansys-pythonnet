@@ -214,7 +214,7 @@ jobs:
         uses: actions/checkout@v6
 
       - name: "Install Python ${{ env.MAIN_PYTHON_VERSION }}"
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: ${{ env.MAIN_PYTHON_VERSION }}
 
@@ -223,7 +223,7 @@ jobs:
           python -m pip install twine
 
       - name: "Download the library artifacts from build-library step"
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: ${{ env.LIBRARY_NAME }}-artifacts
           path: ${{ env.LIBRARY_NAME }}-artifacts
