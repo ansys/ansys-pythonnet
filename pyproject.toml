@@ -31,6 +31,7 @@ classifiers = [
 ]
 
 dynamic = ["version"]
+license-files = []
 
 [dependency-groups]
 dev = [
@@ -48,7 +49,7 @@ doc = [
 ]
 
 [[project.authors]]
-name = "ANSYS, Inc."
+name = "ANSYS Inc."
 email = "pyansys.maintainers@ansys.com"
 
 [project.urls]
@@ -61,7 +62,6 @@ hook-dirs = "pythonnet._pyinstaller:get_hook_dirs"
 [tool.setuptools]
 zip-safe = false
 py-modules = ["clr"]
-license-files = []
 
 [tool.setuptools.dynamic.version]
 file = "version.txt"
