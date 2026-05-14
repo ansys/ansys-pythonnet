@@ -199,7 +199,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [doc-build, tests]
     steps:
-      - uses: ansys/actions/build-library@v10
+      - uses: ansys/actions/build-library@v9  # Can't use v10 because of tag checking mechanism...
         with:
           library-name: ${{ env.LIBRARY_NAME }}
 
