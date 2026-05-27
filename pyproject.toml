@@ -31,7 +31,7 @@ classifiers = [
 ]
 
 dynamic = ["version"]
-license-files = []
+license-files = ["LICENSE"]
 
 [dependency-groups]
 dev = [
