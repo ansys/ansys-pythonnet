@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -33,7 +34,11 @@ namespace Python.Runtime
                                                              BindingFlags.Public |
                                                              BindingFlags.NonPublic;
 
-        internal static Dictionary<MaybeType, ReflectedClrType> cache = new(capacity: 128);
+        // cache: fully-initialised types (lock-free reads).
+        // _inProgressCache: partial types; only accessed under _cacheCreateLock.
+        internal static ConcurrentDictionary<MaybeType, ReflectedClrType> cache = new();
+        internal static readonly Dictionary<MaybeType, ReflectedClrType> _inProgressCache = new();
+        internal static readonly object _cacheCreateLock = new();
         private static readonly Type dtype;
 
         private ClassManager()
@@ -103,13 +108,13 @@ namespace Python.Runtime
             return new()
             {
                 Contexts = contexts,
-                Cache = cache,
+                Cache = new Dictionary<MaybeType, ReflectedClrType>(cache),
             };
         }
 
         internal static void RestoreRuntimeData(ClassManagerState storage)
         {
-            cache = storage.Cache;
+            cache = new ConcurrentDictionary<MaybeType, ReflectedClrType>(storage.Cache);
             var invalidClasses = new List<KeyValuePair<MaybeType, ReflectedClrType>>();
             var contexts = storage.Contexts;
             foreach (var pair in cache)
@@ -599,6 +604,7 @@ namespace Python.Runtime
 
                 ob = new MethodObject(type, name, mlist);
                 ci.members[name] = ob.AllocObject();
+<<<<<<< HEAD
 
                 if (bindingOptions.Pep8Aliases)
                 {
@@ -607,6 +613,8 @@ namespace Python.Runtime
                         ci.members[pep8Name] = ob.AllocObject();
                 }
 
+=======
+>>>>>>> upstream/master
                 if (name == nameof(IDictionary<int, int>.Remove)
                     && mlist.Any(m => m.DeclaringType?.GetInterfaces()
                         .Any(i => i.TryGetGenericDefinition() == typeof(IDictionary<,>)) is true))

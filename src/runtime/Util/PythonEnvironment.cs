@@ -132,7 +132,16 @@ internal class PythonEnvironment
 
     private static string? FindLibPythonInHome(string home, Version version)
     {
+<<<<<<< HEAD
         var libPythonName = GetDefaultDllName(version);
+=======
+        // Probe both — pyvenv.cfg's version field doesn't distinguish free-threaded.
+        var libPythonNames = new[]
+        {
+            GetDefaultDllName(version),
+            GetDefaultDllName(version, freeThreaded: true),
+        };
+>>>>>>> upstream/master
 
         List<string> pathsToCheck = new();
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
@@ -155,7 +164,11 @@ internal class PythonEnvironment
         }
 
         return pathsToCheck
+<<<<<<< HEAD
             .Select(path => Path.Combine(home, path, libPythonName))
+=======
+            .SelectMany(path => libPythonNames.Select(name => Path.Combine(home, path, name)))
+>>>>>>> upstream/master
             .FirstOrDefault(File.Exists);
     }
 
@@ -171,6 +184,7 @@ internal class PythonEnvironment
         }
     }
 
+<<<<<<< HEAD
     internal static string GetDefaultDllName(Version version)
     {
         string prefix = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? "" : "lib";
@@ -178,6 +192,17 @@ internal class PythonEnvironment
         string suffix = RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
             ? Invariant($"{version.Major}{version.Minor}")
             : Invariant($"{version.Major}.{version.Minor}");
+=======
+    internal static string GetDefaultDllName(Version version, bool freeThreaded = false)
+    {
+        string prefix = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? "" : "lib";
+
+        string ftSuffix = freeThreaded ? "t" : "";
+
+        string suffix = RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+            ? Invariant($"{version.Major}{version.Minor}{ftSuffix}")
+            : Invariant($"{version.Major}.{version.Minor}{ftSuffix}");
+>>>>>>> upstream/master
 
         string ext = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? ".dll"
             : RuntimeInformation.IsOSPlatform(OSPlatform.OSX) ? ".dylib"

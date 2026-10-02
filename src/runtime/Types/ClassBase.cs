@@ -360,7 +360,7 @@ namespace Python.Runtime
             if (TryFreeGCHandle(ob))
             {
                 IntPtr addr = ob.DangerousGetAddress();
-                bool deleted = CLRObject.reflectedObjects.Remove(addr);
+                bool deleted = CLRObject.reflectedObjects.TryRemove(addr, out _);
                 Debug.Assert(deleted);
             }
 
@@ -374,7 +374,12 @@ namespace Python.Runtime
             return 0;
         }
 
+<<<<<<< HEAD
         static readonly HashSet<IntPtr> ClearVisited = new();
+=======
+        // tp_clear re-entrancy guard; per-thread since recursion is intra-stack.
+        [ThreadStatic] static HashSet<IntPtr>? _clearVisited;
+>>>>>>> upstream/master
 
         internal static unsafe int BaseUnmanagedClear(BorrowedReference ob)
         {
@@ -390,6 +395,7 @@ namespace Python.Runtime
             if (clearPtr == TypeManager.subtype_clear)
             {
                 var addr = ob.DangerousGetAddress();
+<<<<<<< HEAD
                 if (!ClearVisited.Add(addr))
                     return 0;
 
@@ -401,6 +407,19 @@ namespace Python.Runtime
             {
                 return clear(ob);
             }
+=======
+                var visited = _clearVisited ??= new HashSet<IntPtr>();
+                if (!visited.Add(addr))
+                    return 0;
+
+                try { return clear(ob); }
+                finally { visited.Remove(addr); }
+            }
+            else
+            {
+                return clear(ob);
+            }
+>>>>>>> upstream/master
         }
 
         protected override Dictionary<string, object?> OnSave(BorrowedReference ob)

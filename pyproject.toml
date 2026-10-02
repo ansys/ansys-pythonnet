@@ -1,5 +1,6 @@
 [build-system]
 requires = ["setuptools>=80", "packaging>=24", "pyproject-parser>=0.14"]
+requires = ["setuptools>=80", "packaging>=24", "pyproject-parser>=0.14"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -11,34 +12,33 @@ readme = "README.rst"
 
 dependencies = [
     "clr_loader>=0.3.1,<0.4.0"
+    "clr_loader>=0.3.1,<0.4.0"
 ]
 
-requires-python = ">=3.10, <3.15"
+requires-python = ">=3.11, <3.16"
 
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Developers",
     "Programming Language :: C#",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
     "Programming Language :: Python :: 3.14",
+    "Programming Language :: Python :: 3.15",
     "Operating System :: Microsoft :: Windows",
     "Operating System :: POSIX :: Linux",
     "Operating System :: MacOS :: MacOS X",
 ]
 
 dynamic = ["version"]
-license-files = ["LICENSE"]
 
 [dependency-groups]
 dev = [
     "pytest >= 6",
     "find_libpython >= 0.3",
-    "numpy >=2 ; python_version >= '3.10'",
-    "numpy <2 ; python_version < '3.10'",
+    "numpy >=2",
 ]
 doc = [
     "sphinx",
@@ -53,8 +53,8 @@ name = "ANSYS Inc."
 email = "pyansys.maintainers@ansys.com"
 
 [project.urls]
-Homepage = "https://github.com/pyansys/ansys-pythonnet"
-Sources = "https://github.com/pyansys/ansys-pythonnet"
+Homepage = "https://pythonnet.github.io/"
+Sources = "https://github.com/pythonnet/pythonnet"
 
 [project.entry-points.pyinstaller40]
 hook-dirs = "pythonnet._pyinstaller:get_hook_dirs"

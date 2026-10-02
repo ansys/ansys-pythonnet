@@ -481,7 +481,11 @@ Python idioms:
        name = item.GetName()
 
 Using Context Managers (IDisposable)
+<<<<<<< HEAD
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=======
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>>>>>>> upstream/master
 
 .NET types that implement ``IDisposable`` can be used with Python's context manager
 protocol using the standard ``with`` statement. This automatically calls the object's
