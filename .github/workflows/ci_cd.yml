@@ -171,7 +171,7 @@ jobs:
           python -m build && python -m twine check dist/*
 
       - name: "Upload distribution artifact"
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: ${{ env.LIBRARY_NAME }}-py${{ matrix.python }}-${{ matrix.os.category }}-${{ matrix.os.platform }}-artifacts
           path: dist/
