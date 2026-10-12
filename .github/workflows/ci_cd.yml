@@ -131,6 +131,11 @@ jobs:
         with:
           arch: ${{ matrix.os.platform }}
 
+      - name: Add Mono to PATH
+        if: matrix.os.category == 'windows' && matrix.os.platform == 'x86'
+        run: Add-Content -Path $env:GITHUB_PATH -Value 'C:\Program Files (x86)\Mono\bin'
+        shell: pwsh
+
       - name: Set up Python ${{ matrix.python }}
         uses: astral-sh/setup-uv@v7
         with:
@@ -168,7 +173,7 @@ jobs:
       - name: "Build library source and wheel artifacts"
         run: |
           uv pip install build twine wheel
-          python -m build && python -m twine check dist/*
+          python -m build --installer uv && python -m twine check dist/*
 
       - name: "Upload distribution artifact"
         uses: actions/upload-artifact@v4
