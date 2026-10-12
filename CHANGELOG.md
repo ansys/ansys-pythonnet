@@ -8,7 +8,7 @@ For changes inherited from the upstream Python.NET project, see the
 This project follows [Semantic Versioning](https://semver.org/) and
 [Keep a Changelog](https://keepachangelog.com/).
 
-## Unreleased
+## 3.2.0-rc1 - 2026-10-12
 
 ### Added
 - Merged upstream changes from Python.NET release 3.2.0
